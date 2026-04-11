@@ -3,9 +3,6 @@
 **The most beautiful & complete interactive BATNA tool on the internet**  
 *Harvard Principled Negotiation Framework in a single HTML file*  
 
-![BATNA Strategy Planner Pro](https://via.placeholder.com/1280x640/1e40af/ffffff?text=BATNA+Planner+Pro+Screenshot)  
-*(Replace with your actual screenshot after deployment)*  
-
 ---
 
 ## ✨ Features  
