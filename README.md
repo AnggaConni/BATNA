@@ -93,11 +93,4 @@ Use sliders to test if a deal is possible:
 
 MIT License — free to use, modify, and distribute.
 
----
 
-## 📦 Installation  
-
-```bash
-git clone https://github.com/yourusername/batna-planner.git
-cd batna-planner
-open index.html
