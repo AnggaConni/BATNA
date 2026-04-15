@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BATNA Strategy Planner Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' } } } }
+}
+</script>
+<style>
+*{font-family:'Inter',sans-serif}
+body{padding-bottom:76px;background:#f8fafc}
+@media(min-width:768px){body{padding-bottom:0}}
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e5e7eb;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px)}
+.desktop-nav{display:none}
+@media(min-width:768px){.mobile-nav{display:none}.desktop-nav{display:flex}}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;font-size:10px;color:#6b7280;cursor:pointer;border:none;background:transparent;gap:3px;transition:color .15s}
+.nav-btn i{font-size:18px}
+.nav-btn.active{color:#2563eb}
+.nav-btn.active i{color:#2563eb}
+.desktop-tab{padding:8px 18px;border-radius:8px;font-size:14px;font-weight:500;color:#6b7280;cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:6px;transition:all .15s}
+.desktop-tab:hover{background:#f1f5f9;color:#374151}
+.desktop-tab.active{background:#2563eb;color:white}
+.custom-checkbox{appearance:none;width:1.25rem;height:1.25rem;border:2px solid #cbd5e1;border-radius:.3rem;background:white;cursor:pointer;display:grid;place-content:center;transition:all .15s;flex-shrink:0}
+.custom-checkbox::before{content:"";width:.65rem;height:.65rem;transform:scale(0);transition:120ms transform ease-in-out;clip-path:polygon(14% 44%,0 65%,50% 100%,100% 16%,80% 0%,43% 62%);background:white}
+.custom-checkbox:checked{background:#2563eb;border-color:#2563eb}
+.custom-checkbox:checked::before{transform:scale(1)}
+.howto-body{display:none;overflow:hidden}
+.howto-body.open{display:block;animation:fadeUp .2s ease}
+.step-num{width:22px;height:22px;border-radius:50%;background:#2563eb;color:white;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+input[type=range]{accent-color:#2563eb;width:100%}
+.decision-btn{padding:7px 14px;border-radius:8px;border:1.5px solid #e5e7eb;background:white;cursor:pointer;font-size:13px;font-weight:500;color:#374151;transition:all .15s}
+.decision-btn:hover{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8}
+.decision-btn.selected{border-color:#2563eb;background:#2563eb;color:white}
+.card{background:white;border-radius:16px;border:1px solid #e5e7eb;padding:20px}
+@media(min-width:640px){.card{padding:24px}}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:.02em}
+.alt-row{animation:fadeUp .2s ease;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:8px}
+.zopa-track{height:32px;border-radius:10px;background:#f1f5f9;position:relative;overflow:hidden;border:1px solid #e5e7eb}
+.phrase-card{background:#f8fafc;border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:8px;font-size:13px}
+</style>
+</head>
+<body class="text-gray-800">
+
+<!-- HEADER -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="bg-blue-100 p-2 rounded-xl"><i class="fas fa-chess-knight text-blue-600 text-xl"></i></div>
+      <div>
+        <h1 class="text-base md:text-xl font-bold text-gray-900 leading-tight">BATNA Planner Pro</h1>
+        <p class="text-xs text-gray-400 hidden sm:block">Harvard Principled Negotiation Framework</p>
+      </div>
+    </div>
+    <!-- Desktop nav -->
+    <nav class="desktop-nav items-center gap-1">
+      <button class="desktop-tab active" onclick="switchTab('analyzer',this)"><i class="fas fa-magnifying-glass-chart"></i>Analyzer</button>
+      <button class="desktop-tab" onclick="switchTab('builder',this)"><i class="fas fa-hammer"></i>Build BATNA</button>
+      <button class="desktop-tab" onclick="switchTab('concepts',this)"><i class="fas fa-lightbulb"></i>Concepts</button>
+      <button class="desktop-tab" onclick="switchTab('playbook',this)"><i class="fas fa-book-open"></i>Playbook</button>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-5">
+
+<!-- ==================== TAB 1: ANALYZER ==================== -->
+<div id="tab-analyzer" class="tab-pane active">
+  <!-- Hero Banner -->
+  <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl p-5 md:p-8 mb-6 text-white">
+    <div class="flex items-start gap-3 mb-4">
+      <i class="fas fa-lightbulb text-yellow-400 text-xl mt-0.5"></i>
+      <h2 class="text-lg md:text-xl font-bold">The Golden Rule of Negotiation</h2>
+    </div>
+    <p class="text-blue-100 text-base md:text-lg leading-relaxed mb-4">"Do not pretend you don't want it. Show that you are interested — but never show that you <em>need</em> it."</p>
+    <div class="grid grid-cols-3 gap-3 mt-4">
+      <div class="bg-white/15 rounded-xl p-3 text-center">
+        <div class="text-2xl mb-1">❄️</div>
+        <div class="text-xs font-semibold text-blue-100">Too cold</div>
+        <div class="text-xs text-blue-200 mt-1">They walk away</div>
+      </div>
+      <div class="bg-yellow-400/20 border border-yellow-300/30 rounded-xl p-3 text-center">
+        <div class="text-2xl mb-1">⭐</div>
+        <div class="text-xs font-bold text-yellow-200">The zone</div>
+        <div class="text-xs text-yellow-100 mt-1">Care, not depend</div>
+      </div>
+      <div class="bg-white/15 rounded-xl p-3 text-center">
+        <div class="text-2xl mb-1">🔥</div>
+        <div class="text-xs font-semibold text-blue-100">Too desperate</div>
+        <div class="text-xs text-blue-200 mt-1">You lose power</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+    <!-- LEFT: Charts + Theory -->
+    <div class="md:col-span-5 space-y-5">
+      <!-- Radar Chart -->
+      <div class="card">
+        <h3 class="font-bold text-gray-900 mb-1 flex items-center gap-2"><i class="fas fa-chart-area text-blue-500"></i>Power Dynamics Radar</h3>
+        <p class="text-xs text-gray-400 mb-4">Select scenarios to visualize how power shifts in your negotiation.</p>
+        <div class="relative w-full" style="max-height:260px;display:flex;justify-content:center">
+          <canvas id="batnaRadar" style="max-height:260px"></canvas>
+        </div>
+        <!-- Legend -->
+        <div class="grid grid-cols-2 gap-1 mt-4 text-xs text-gray-500">
+          <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>Your Leverage</div>
+          <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-400 inline-block"></span>Their Leverage</div>
+          <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Mutual Interest</div>
+          <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>Flexibility Need</div>
+          <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>Risk Level</div>
+        </div>
+      </div>
+
+      <!-- Myth Card -->
+      <div class="card">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><i class="fas fa-brain text-purple-500"></i>The "Pretending" Myth</h3>
+        <div class="bg-red-50 border border-red-100 rounded-xl p-3 mb-3">
+          <p class="font-semibold text-red-800 text-sm flex gap-2"><i class="fas fa-times-circle text-red-500 mt-0.5"></i>Myth: "Act like you don't care"</p>
+          <p class="text-xs text-red-700 mt-1">This is a cheap ego game. If you show zero interest, the other party thinks: <em>"Why continue? They're not serious."</em></p>
+        </div>
+        <div class="bg-green-50 border border-green-100 rounded-xl p-3">
+          <p class="font-semibold text-green-800 text-sm flex gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i>Reality: BATNA gives you inner strength</p>
+          <p class="text-xs text-green-700 mt-1">Your power comes from strong alternatives — not from hiding interest. <strong>Showing interest = showing seriousness.</strong></p>
+        </div>
+      </div>
+
+      <!-- Dating Analogy -->
+      <div class="card">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><i class="fas fa-heart text-pink-500"></i>The Dating Analogy</h3>
+        <p class="text-sm text-gray-500 mb-3">Negotiation dynamics mirror dating perfectly:</p>
+        <div class="space-y-2">
+          <div class="flex gap-3 items-start"><i class="fas fa-snowflake text-blue-400 mt-1 w-4"></i><div><span class="text-sm font-semibold text-gray-800">Pretending not to care</span><span class="text-sm text-gray-500"> → The other person just leaves.</span></div></div>
+          <div class="flex gap-3 items-start"><i class="fas fa-fire text-orange-500 mt-1 w-4"></i><div><span class="text-sm font-semibold text-gray-800">Too eager / needy</span><span class="text-sm text-gray-500"> → You signal desperation, lose leverage.</span></div></div>
+          <div class="flex gap-3 items-start"><i class="fas fa-star text-yellow-500 mt-1 w-4"></i><div><span class="text-sm font-semibold text-gray-800">Ideal:</span><span class="text-sm text-gray-500"> Interested, but with clear standards and real alternatives.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Scenario Checklist + Results -->
+    <div class="md:col-span-7 space-y-5">
+      <div class="card">
+        <h2 class="text-xl font-bold text-gray-900 mb-1">Scenario Analyzer</h2>
+        <p class="text-sm text-gray-400 mb-5">Check every statement that describes your current situation. Get tailored strategy + actionable steps.</p>
+        <div class="space-y-2.5" id="checklist-container"></div>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="bg-blue-50 rounded-2xl border border-blue-100 p-5 min-h-64" id="results-panel">
+        <div id="empty-state" class="text-center py-10 text-blue-400">
+          <i class="fas fa-clipboard-list text-4xl mb-3"></i>
+          <p class="font-medium text-sm">No scenarios selected yet</p>
+          <p class="text-xs mt-1 text-blue-300">Check boxes above to generate your strategy</p>
+        </div>
+        <div id="results-area" class="hidden">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-blue-900 flex items-center gap-2"><i class="fas fa-route"></i>Strategic Recommendations</h3>
+            <span id="sel-count" class="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded-full font-semibold"></span>
+          </div>
+          <div id="rec-list" class="space-y-4"></div>
+          <div class="mt-5 bg-white rounded-xl border border-blue-100 p-4 text-xs text-gray-600">
+            <strong><i class="fas fa-info-circle text-blue-500 mr-1"></i>Core Reminder:</strong> BATNA isn't about hiding desire. It's about building real alternatives so your desire never turns into dependence.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TAB 2: BUILD BATNA ==================== -->
+<div id="tab-builder" class="tab-pane">
+  <div class="mb-5">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">Build Your BATNA</h2>
+    <p class="text-sm text-gray-500">Use the Harvard 3-step process to identify and strengthen your best alternative.</p>
+  </div>
+
+  <!-- Step progress -->
+  <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+    <div class="flex items-center gap-2 shrink-0">
+      <div class="w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold flex items-center justify-center">1</div>
+      <span class="text-sm font-semibold text-blue-700">List Alternatives</span>
+    </div>
+    <div class="h-px bg-blue-200 flex-1 min-w-8"></div>
+    <div class="flex items-center gap-2 shrink-0">
+      <div class="w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold flex items-center justify-center">2</div>
+      <span class="text-sm font-semibold text-blue-700">Rate Each Option</span>
+    </div>
+    <div class="h-px bg-blue-200 flex-1 min-w-8"></div>
+    <div class="flex items-center gap-2 shrink-0">
+      <div class="w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold flex items-center justify-center">3</div>
+      <span class="text-sm font-semibold text-blue-700">Identify Your BATNA</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+    <!-- Steps 1 & 2 -->
+    <div class="space-y-5">
+      <div class="card">
+        <h3 class="font-bold text-gray-900 mb-1 flex items-center gap-2"><span class="w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">1</span>List Your Alternatives</h3>
+        <p class="text-xs text-gray-400 mb-4 ml-9">What will you do if this negotiation fails? Be specific and honest.</p>
+        <div id="alt-list" class="space-y-2 mb-3"></div>
+        <button onclick="addAlternative()" class="w-full py-2.5 border-2 border-dashed border-blue-200 rounded-xl text-blue-500 text-sm font-medium hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+          <i class="fas fa-plus"></i>Add Alternative
+        </button>
+        <div class="mt-4 bg-amber-50 border border-amber-100 rounded-xl p-3 text-xs text-amber-800">
+          <i class="fas fa-lightbulb text-amber-500 mr-1"></i><strong>Tip:</strong> Aim for at least 3 alternatives. Even imperfect ones change your psychology and give you real freedom.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="font-bold text-gray-900 mb-1 flex items-center gap-2"><span class="w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">2</span>Rate Each Option</h3>
+        <p class="text-xs text-gray-400 mb-4 ml-9">Score how good each alternative truly is (1 = terrible, 10 = excellent).</p>
+        <div id="rating-list" class="space-y-4"></div>
+        <div class="mt-4 bg-purple-50 border border-purple-100 rounded-xl p-3 text-xs text-purple-800">
+          <i class="fas fa-warning text-purple-500 mr-1"></i><strong>Reality check:</strong> Harvard research shows most negotiators <em>overestimate</em> their BATNA quality. Be brutally honest.
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 + Reservation Price -->
+    <div class="space-y-5">
+      <div class="card">
+        <h3 class="font-bold text-gray-900 mb-1 flex items-center gap-2"><span class="w-7 h-7 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center">3</span>Your BATNA</h3>
+        <p class="text-xs text-gray-400 mb-4 ml-9">The highest-rated alternative is your BATNA — your walk-away power.</p>
+        <div id="batna-result" class="bg-gray-50 border border-dashed border-gray-200 rounded-xl p-6 text-center text-gray-400 text-sm">
+          Add and rate alternatives to reveal your BATNA
+        </div>
+        <div class="mt-4 grid grid-cols-3 gap-2" id="batna-stats" style="display:none">
+          <div class="bg-blue-50 rounded-xl p-3 text-center">
+            <div class="text-xl font-bold text-blue-700" id="stat-count">0</div>
+            <div class="text-xs text-blue-500">Alternatives</div>
+          </div>
+          <div class="bg-green-50 rounded-xl p-3 text-center">
+            <div class="text-xl font-bold text-green-700" id="stat-best">—</div>
+            <div class="text-xs text-green-500">Best Score</div>
+          </div>
+          <div class="bg-amber-50 rounded-xl p-3 text-center">
+            <div class="text-xl font-bold text-amber-700" id="stat-avg">—</div>
+            <div class="text-xs text-amber-500">Avg Score</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reveal / Conceal Guide -->
+      <div class="card">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><i class="fas fa-user-secret text-gray-500"></i>Should You Reveal Your BATNA?</h3>
+        <p class="text-xs text-gray-400 mb-4">A critical judgment call. Answer the questions below:</p>
+        <div class="space-y-3">
+          <div>
+            <p class="text-xs font-semibold text-gray-600 mb-2">How strong is your BATNA?</p>
+            <div class="flex gap-2" id="q1">
+              <button class="decision-btn" data-q="q1" data-v="strong" onclick="selectDecision(this)">Strong</button>
+              <button class="decision-btn" data-q="q1" data-v="medium" onclick="selectDecision(this)">Medium</button>
+              <button class="decision-btn" data-q="q1" data-v="weak" onclick="selectDecision(this)">Weak</button>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-gray-600 mb-2">What stage of negotiation?</p>
+            <div class="flex gap-2" id="q2">
+              <button class="decision-btn" data-q="q2" data-v="early" onclick="selectDecision(this)">Early</button>
+              <button class="decision-btn" data-q="q2" data-v="mid" onclick="selectDecision(this)">Mid</button>
+              <button class="decision-btn" data-q="q2" data-v="late" onclick="selectDecision(this)">Late</button>
+            </div>
+          </div>
+        </div>
+        <div id="reveal-rec" class="mt-4 hidden rounded-xl p-3 text-sm"></div>
+      </div>
+
+      <!-- WATNA warning -->
+      <div class="bg-red-50 border border-red-100 rounded-xl p-4">
+        <h4 class="font-bold text-red-800 text-sm mb-2 flex items-center gap-2"><i class="fas fa-skull-crossbones text-red-500"></i>Know Your WATNA Too</h4>
+        <p class="text-xs text-red-700">WATNA = <strong>Worst</strong> Alternative to a Negotiated Agreement. Knowing your worst case prevents panic when things get tense — but <strong>never negotiate from your WATNA.</strong> Use it only as a mental floor for courage.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TAB 3: CONCEPTS ==================== -->
+<div id="tab-concepts" class="tab-pane">
+  <div class="mb-5">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">Key Concepts</h2>
+    <p class="text-sm text-gray-500">The theoretical foundation behind principled negotiation.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+    <!-- BATNA definition -->
+    <div class="card border-l-4 border-l-blue-500">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-blue-100 p-2 rounded-lg"><i class="fas fa-anchor text-blue-600"></i></div>
+        <h3 class="font-bold text-gray-900">BATNA</h3>
+      </div>
+      <p class="text-sm text-gray-600 mb-3">Best Alternative To a Negotiated Agreement. What you'll do if talks fail — and your primary source of negotiating power.</p>
+      <div class="bg-blue-50 rounded-xl p-3 text-xs text-blue-800">
+        <strong>The Rule:</strong> If the deal on the table is better than your BATNA → accept. If not → walk away or renegotiate.
+      </div>
+      <p class="text-xs text-gray-400 mt-3 italic">Source: Fisher, Ury & Patton — "Getting to Yes" (1981)</p>
+    </div>
+
+    <!-- Probabilistic BATNA -->
+    <div class="card border-l-4 border-l-purple-500">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-purple-100 p-2 rounded-lg"><i class="fas fa-dice text-purple-600"></i></div>
+        <h3 class="font-bold text-gray-900">Probabilistic BATNA</h3>
+      </div>
+      <p class="text-sm text-gray-600 mb-3">Your BATNA is rarely a guaranteed option. It's a range of possibilities with probabilities. Use decision-tree thinking to assess it realistically.</p>
+      <div class="space-y-2 text-xs">
+        <div class="flex items-center gap-2"><div class="w-20 h-2 rounded bg-green-400"></div><span class="text-gray-600">Best case (30%)</span></div>
+        <div class="flex items-center gap-2"><div class="w-14 h-2 rounded bg-yellow-400"></div><span class="text-gray-600">Likely case (50%)</span></div>
+        <div class="flex items-center gap-2"><div class="w-8 h-2 rounded bg-red-400"></div><span class="text-gray-600">Worst case (20%)</span></div>
+      </div>
+      <p class="text-xs text-gray-400 mt-3 italic">Don't negotiate from your WATNA just because bad outcomes exist.</p>
+    </div>
+
+    <!-- Sequential strategy -->
+    <div class="card border-l-4 border-l-green-500">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-green-100 p-2 rounded-lg"><i class="fas fa-list-ol text-green-600"></i></div>
+        <h3 class="font-bold text-gray-900">Sequential Negotiation Strategy</h3>
+      </div>
+      <p class="text-sm text-gray-600 mb-3">When negotiating with multiple parties, start with less preferred partners first. This gives you a real, signed BATNA before you approach your preferred target.</p>
+      <div class="bg-green-50 rounded-xl p-3">
+        <div class="flex items-center gap-3 text-xs">
+          <div class="text-center"><div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold mb-1">B</div><div class="text-gray-500">Start here<br/>(fallback)</div></div>
+          <i class="fas fa-arrow-right text-green-400"></i>
+          <div class="text-center"><div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mb-1">A</div><div class="text-blue-600">Target<br/>(preferred)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opponents BATNA -->
+    <div class="card border-l-4 border-l-orange-500">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-orange-100 p-2 rounded-lg"><i class="fas fa-chess text-orange-600"></i></div>
+        <h3 class="font-bold text-gray-900">Know Their BATNA Too</h3>
+      </div>
+      <p class="text-sm text-gray-600 mb-3">Understanding the other party's alternatives is equally critical. It reveals the true bargaining range and tells you how hard you can push.</p>
+      <div class="space-y-2 text-xs text-gray-600">
+        <div class="flex gap-2"><i class="fas fa-magnifying-glass text-orange-400 w-4"></i>Research publicly (LinkedIn, news, contacts)</div>
+        <div class="flex gap-2"><i class="fas fa-comments text-orange-400 w-4"></i>Ask: "What happens if we don't agree?"</div>
+        <div class="flex gap-2"><i class="fas fa-triangle-exclamation text-orange-400 w-4"></i>Reality-test — many negotiators bluff their BATNA</div>
+        <div class="flex gap-2"><i class="fas fa-box text-orange-400 w-4"></i>Use MESO (package offers) to reveal preferences</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZOPA Visualizer -->
+  <div class="card mb-5">
+    <h3 class="font-bold text-gray-900 mb-1 flex items-center gap-2"><i class="fas fa-arrows-left-right text-teal-600"></i>ZOPA — Zone of Potential Agreement</h3>
+    <p class="text-sm text-gray-500 mb-5">ZOPA is the overlap between what you'll accept and what they'll offer. No overlap = no deal possible. Adjust sliders to visualize your situation.</p>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+      <div>
+        <label class="text-xs font-semibold text-gray-600 mb-2 block">Your minimum acceptable value: <span id="my-min-val" class="text-blue-600">40</span></label>
+        <input type="range" min="0" max="100" value="40" id="my-min" oninput="updateZOPA()">
+        <p class="text-xs text-gray-400 mt-1">The lowest deal you'd accept before walking away.</p>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-gray-600 mb-2 block">Their maximum they'll offer: <span id="their-max-val" class="text-orange-600">70</span></label>
+        <input type="range" min="0" max="100" value="70" id="their-max" oninput="updateZOPA()">
+        <p class="text-xs text-gray-400 mt-1">The best offer they're willing or able to make.</p>
+      </div>
+    </div>
+
+    <!-- Visual bar -->
+    <div class="zopa-track mb-3">
+      <div id="zopa-fill" class="h-full absolute transition-all duration-300" style="left:0;width:0"></div>
+      <div id="my-marker" class="absolute top-0 bottom-0 w-1 bg-blue-600 transition-all duration-300" style="left:40%"></div>
+      <div id="their-marker" class="absolute top-0 bottom-0 w-1 bg-orange-500 transition-all duration-300" style="left:70%"></div>
+    </div>
+    <div class="flex justify-between text-xs text-gray-400 mb-4">
+      <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+    </div>
+    <div id="zopa-verdict" class="rounded-xl p-4 text-sm font-medium text-center transition-all"></div>
+  </div>
+
+  <!-- Tactic defense guide -->
+  <div class="card">
+    <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><i class="fas fa-shield text-red-500"></i>Defending Against Hard Tactics</h3>
+    <p class="text-sm text-gray-400 mb-4">Per Fisher & Ury: hard negotiators beat soft negotiators. The counter isn't matching aggression — it's principled defense.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">When they use...</p>
+        <div class="space-y-2 text-sm text-gray-700">
+          <div class="bg-red-50 border border-red-100 rounded-lg p-3"><strong>Artificial deadline:</strong> "We need an answer today."<br/><span class="text-xs text-red-600 mt-1 block">→ Name it: "Is this a real deadline or a pressure tactic? Let's take the time to get this right."</span></div>
+          <div class="bg-red-50 border border-red-100 rounded-lg p-3"><strong>Take-it-or-leave-it:</strong> "This is our final offer."<br/><span class="text-xs text-red-600 mt-1 block">→ Ignore the label, test the offer: "Help me understand the reasoning behind this number."</span></div>
+          <div class="bg-red-50 border border-red-100 rounded-lg p-3"><strong>Good cop / bad cop:</strong> Good partner softens bad's demands.<br/><span class="text-xs text-red-600 mt-1 block">→ Name the dynamic calmly — it evaporates under a spotlight.</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Your principled counter</p>
+        <div class="space-y-2 text-sm text-gray-700">
+          <div class="bg-green-50 border border-green-100 rounded-lg p-3"><strong>Use objective criteria:</strong> "What does industry data say is fair here?"</div>
+          <div class="bg-green-50 border border-green-100 rounded-lg p-3"><strong>Separate people from problem:</strong> Be warm to the person, firm on the substance.</div>
+          <div class="bg-green-50 border border-green-100 rounded-lg p-3"><strong>Your BATNA is your anchor:</strong> Before every session, remind yourself: "I can walk away and be fine."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TAB 4: PLAYBOOK ==================== -->
+<div id="tab-playbook" class="tab-pane">
+  <div class="mb-5">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">Negotiation Playbook</h2>
+    <p class="text-sm text-gray-500">Your pre-negotiation checklist, power phrases, and field guide.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+    <!-- Pre-negotiation checklist -->
+    <div class="card">
+      <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fas fa-list-check text-blue-500"></i>Pre-Negotiation Checklist</h3>
+      <div class="space-y-2" id="pre-checklist">
+        <!-- Dynamic checkboxes -->
+      </div>
+    </div>
+
+    <!-- Power questions -->
+    <div class="card">
+      <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fas fa-comments text-green-500"></i>Power Questions to Ask</h3>
+      <div class="space-y-2 text-sm text-gray-700">
+        <div class="phrase-card" style="border-color:#22c55e">
+          <p class="font-semibold text-green-800">"What matters most to you in this deal?"</p>
+          <p class="text-xs text-gray-500 mt-1">Surfaces interests, not positions. Reveals creative room.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#22c55e">
+          <p class="font-semibold text-green-800">"What happens on your end if we don't reach an agreement?"</p>
+          <p class="text-xs text-gray-500 mt-1">Reveals their BATNA. Watch body language for tells.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#22c55e">
+          <p class="font-semibold text-green-800">"What would need to be true for this to work for you?"</p>
+          <p class="text-xs text-gray-500 mt-1">Opens creative problem-solving instead of positional bargaining.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#22c55e">
+          <p class="font-semibold text-green-800">"Help me understand the reasoning behind that number."</p>
+          <p class="text-xs text-gray-500 mt-1">Objective criteria request — forces rational justification.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#22c55e">
+          <p class="font-semibold text-green-800">"What comparable agreements look like in this space?"</p>
+          <p class="text-xs text-gray-500 mt-1">Anchors to external standards, removes ego from the equation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phrases to avoid -->
+    <div class="card">
+      <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fas fa-ban text-red-500"></i>Phrases That Betray Your Position</h3>
+      <div class="space-y-2 text-sm">
+        <div class="phrase-card" style="border-color:#ef4444">
+          <p class="font-semibold text-red-800">"We really need this deal to close by Friday."</p>
+          <p class="text-xs text-gray-500 mt-1">Signals desperation and reveals your hard deadline — leverage killer.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#ef4444">
+          <p class="font-semibold text-red-800">"This is the only option I have right now."</p>
+          <p class="text-xs text-gray-500 mt-1">Never reveal a weak BATNA. Even a bluff alternative is better than this.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#ef4444">
+          <p class="font-semibold text-red-800">"I can go lower" (said too early).</p>
+          <p class="text-xs text-gray-500 mt-1">Premature concession signals you haven't anchored at your real position.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#ef4444">
+          <p class="font-semibold text-red-800">"What's the minimum you'd accept?" (asking them)</p>
+          <p class="text-xs text-gray-500 mt-1">Invites them to anchor low for you. Never ask for their reservation price.</p>
+        </div>
+        <div class="phrase-card" style="border-color:#ef4444">
+          <p class="font-semibold text-red-800">"I'll take whatever you think is fair."</p>
+          <p class="text-xs text-gray-500 mt-1">Abdication. Fairness without criteria is just their preference.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body language & signals -->
+    <div class="card">
+      <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fas fa-eye text-purple-500"></i>Signals to Read & Manage</h3>
+      <div class="space-y-3">
+        <div>
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Signs they have a weak BATNA</p>
+          <div class="space-y-1 text-xs text-gray-700">
+            <div class="flex gap-2"><i class="fas fa-circle text-amber-400 mt-1 text-xs"></i>They reach out to you first, repeatedly</div>
+            <div class="flex gap-2"><i class="fas fa-circle text-amber-400 mt-1 text-xs"></i>They accept concessions too quickly</div>
+            <div class="flex gap-2"><i class="fas fa-circle text-amber-400 mt-1 text-xs"></i>Their stated deadline keeps shifting</div>
+            <div class="flex gap-2"><i class="fas fa-circle text-amber-400 mt-1 text-xs"></i>They ask many questions about your alternatives</div>
+          </div>
+        </div>
+        <div class="border-t border-gray-100 pt-3">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Signals of strength you should project</p>
+          <div class="space-y-1 text-xs text-gray-700">
+            <div class="flex gap-2"><i class="fas fa-circle text-blue-400 mt-1 text-xs"></i>Calm pace — no rushing, no over-availability</div>
+            <div class="flex gap-2"><i class="fas fa-circle text-blue-400 mt-1 text-xs"></i>"I'm evaluating a few options" (even if vague)</div>
+            <div class="flex gap-2"><i class="fas fa-circle text-blue-400 mt-1 text-xs"></i>Comfortable silence after making an offer</div>
+            <div class="flex gap-2"><i class="fas fa-circle text-blue-400 mt-1 text-xs"></i>Willingness to walk away from the table</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Source footer card -->
+  <div class="bg-gray-800 rounded-2xl p-5 text-white">
+    <h3 class="font-bold mb-2 flex items-center gap-2"><i class="fas fa-book text-blue-400"></i>Theoretical Foundation</h3>
+    <p class="text-gray-300 text-sm mb-3">Based on the Principled Negotiation framework by the Harvard Negotiation Project.</p>
+    <div class="bg-gray-700 p-4 rounded-xl text-sm border border-gray-600">
+      <p class="mb-2"><strong>Primary source:</strong> <em>"Getting to Yes: Negotiating Agreement Without Giving In"</em> — Roger Fisher & William Ury (1981, 3rd ed. 2011)</p>
+      <p class="mb-2"><strong>Further reading:</strong> <em>"Getting Past No"</em> — William Ury (1991)</p>
+      <p class="text-gray-400 text-xs italic">BATNA = Best Alternative To a Negotiated Agreement. It is "the only standard which can protect you both from accepting terms that are too unfavorable and from rejecting terms it would be in your interest to accept." — Fisher & Ury</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+  <button class="nav-btn active" onclick="switchTab('analyzer',this)" id="mob-analyzer"><i class="fas fa-magnifying-glass-chart"></i>Analyzer</button>
+  <button class="nav-btn" onclick="switchTab('builder',this)" id="mob-builder"><i class="fas fa-hammer"></i>Build</button>
+  <button class="nav-btn" onclick="switchTab('concepts',this)" id="mob-concepts"><i class="fas fa-lightbulb"></i>Concepts</button>
+  <button class="nav-btn" onclick="switchTab('playbook',this)" id="mob-playbook"><i class="fas fa-book-open"></i>Playbook</button>
+</nav>
+
+<script>
+// ============= TAB SWITCHING =============
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.desktop-tab, .nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[onclick*="' + name + '"]').forEach(b => b.classList.add('active'));
+}
+
+// ============= SCENARIO DATA =============
+const colorMap = {
+  orange:{ bg:'#fff7ed', border:'#fed7aa', icon:'#ea580c', badge:'#ffedd5', badgeTxt:'#9a3412' },
+  green: { bg:'#f0fdf4', border:'#bbf7d0', icon:'#16a34a', badge:'#dcfce7', badgeTxt:'#166534' },
+  purple:{ bg:'#faf5ff', border:'#e9d5ff', icon:'#9333ea', badge:'#f3e8ff', badgeTxt:'#6b21a8' },
+  red:   { bg:'#fef2f2', border:'#fecaca', icon:'#dc2626', badge:'#fee2e2', badgeTxt:'#991b1b' },
+  blue:  { bg:'#eff6ff', border:'#bfdbfe', icon:'#2563eb', badge:'#dbeafe', badgeTxt:'#1e40af' },
+  yellow:{ bg:'#fefce8', border:'#fef08a', icon:'#ca8a04', badge:'#fef9c3', badgeTxt:'#854d0e' },
+  teal:  { bg:'#f0fdfa', border:'#99f6e4', icon:'#0d9488', badge:'#ccfbf1', badgeTxt:'#134e4a' },
+};
+
+const scenarios = [
+  {
+    id:'s1', label:"I really want this deal — but the other party seems passive or uninterested.",
+    title:"You Want It, They Don't", icon:"fa-search", color:"orange",
+    strategy:"Explore, don't force",
+    description:"Your primary move is to build alternatives immediately. Show genuine interest without desperation. Leave the door open while you actively explore options in parallel.",
+    howTo:[
+      { step:"Build parallel alternatives NOW", detail:"Identify 2–3 other parties you could work with. Even weak alternatives shift your mindset from 'I need this' to 'I'm choosing this.' Act on this today." },
+      { step:"Set a soft deadline", detail:"Communicate a real timeline: 'I need to make a decision by [date].' This creates urgency without sounding desperate — and it's honest." },
+      { step:"Surface their hidden interest", detail:"Ask: 'What would need to be true for this to work for you?' They may be interested but blocked by something you haven't addressed. Listen carefully." },
+      { step:"Practice emotional detachment daily", detail:"Each morning before the negotiation, remind yourself: 'If this falls through, I have path B and C.' This changes your energy at the table — people sense desperation physically." }
+    ],
+    radarMetrics:[3,9,2,8,7]
+  },
+  {
+    id:'s2', label:"We both genuinely want this deal to happen.",
+    title:"Mutual Desire — The Sweet Spot", icon:"fa-handshake", color:"green",
+    strategy:"Align & create joint value",
+    description:"This is the optimal zone. Stop playing games. Focus on expanding value for both sides through principled negotiation — interests over positions.",
+    howTo:[
+      { step:"Reveal interests, not positions", detail:"Ask 'What matters most to you in this deal?' instead of defending positions. Hidden interests often unlock creative solutions neither party initially imagined." },
+      { step:"Expand the pie before splitting it", detail:"Explore: payment terms, scope adjustments, timelines, exclusivity, referrals, training, or add-ons that cost you little but mean a lot to them. Create value before claiming it." },
+      { step:"Use objective criteria as your anchor", detail:"'Based on comparable deals in this space...' Benchmarks remove ego and give both sides rational ground. Both parties feel they got something fair." },
+      { step:"Build momentum — don't stall", detail:"Mutual desire fades over time. Set a shared timeline and honor it. Schedule next steps before you leave every meeting. Delay kills good deals." }
+    ],
+    radarMetrics:[8,8,10,3,2]
+  },
+  {
+    id:'s3', label:"The other party has many alternatives — their BATNA is much stronger than mine.",
+    title:"Power Imbalance — They Hold Cards", icon:"fa-scale-unbalanced", color:"purple",
+    strategy:"Uniqueness & creative flexibility",
+    description:"You cannot win a power struggle here. Reframe the game. Find what you offer that their strong alternatives simply cannot match.",
+    howTo:[
+      { step:"Find the gap their alternatives don't cover", detail:"Ask: 'What's your biggest concern or risk with [their other option]?' Their answer tells you exactly where to position your unique value. Solve that problem specifically." },
+      { step:"Be the risk-free choice", detail:"Offer a trial period, milestone-based payment, pilot project, or money-back terms. If their alternative is 'safe' and you're 'unknown,' systematically remove perceived risk." },
+      { step:"Bundle creatively — don't just cut price", detail:"Add low-cost extras that matter to them: speed, flexibility, personalized service, unique relationships. Small additions can tip decisions when price is equal." },
+      { step:"Compete on dimensions you win — not price", detail:"Price-matching a stronger party in a race to the bottom is a losing game. Identify 2–3 dimensions where you genuinely excel and anchor the conversation there." }
+    ],
+    radarMetrics:[4,9,6,9,7]
+  },
+  {
+    id:'s4', label:"My BATNA is very weak — I have few or no other good options right now.",
+    title:"Weak Personal Leverage ⚠️", icon:"fa-shield-halved", color:"red",
+    strategy:"Strengthen before negotiating",
+    description:"WARNING: High risk of accepting unfavorable terms driven by desperation. If at all possible, delay and invest time building real alternatives before you negotiate.",
+    howTo:[
+      { step:"Pause if you can — delay is strategic", detail:"A bad deal signed in desperation is worse than waiting 2 weeks. Buy time with: 'I want to give this the careful consideration it deserves before committing.' Most parties respect this." },
+      { step:"Build 3+ alternatives immediately", detail:"Contact 3 other potential partners, clients, or options TODAY. Even weak alternatives change your psychology at the table and your willingness to walk away." },
+      { step:"Upgrade your offering before negotiating", detail:"Can you add a credential, reference, capability, or partnership? Even small improvements to what you're bringing build real confidence — and real value." },
+      { step:"Never signal your desperation", detail:"Keep saying: 'I'm evaluating several options right now.' Never reveal your WATNA. Information asymmetry is your friend here. Let them assume your alternatives are stronger than they are." }
+    ],
+    radarMetrics:[1,7,5,9,10]
+  },
+  {
+    id:'s5', label:"I don't know what the other party's alternatives or real constraints are.",
+    title:"Information Blind Spot", icon:"fa-eye-slash", color:"blue",
+    strategy:"Probe, research, reality-test",
+    description:"Negotiating without knowing their alternatives is like playing poker without reading the table. Invest in information gathering before making significant moves.",
+    howTo:[
+      { step:"Ask the BATNA question directly", detail:"'What happens on your end if we don't reach an agreement here?' Watch body language and listen for what they avoid saying — evasion is information too." },
+      { step:"Research their public situation", detail:"LinkedIn, industry news, mutual contacts, press releases, earnings calls. Are they growing fast? Under financial pressure? Losing market share? All context shapes their urgency." },
+      { step:"Use MESO — multiple simultaneous offers", detail:"Offer 2–3 different package options of equal value to you but different in composition. Which one they prefer — or reject — reveals their hidden priorities and constraints." },
+      { step:"Reality-test their claimed alternatives", detail:"If they say 'we have other options,' probe: 'That's great — what timeline are you working with on those?' Bluffing usually unravels under specific, calm questions." }
+    ],
+    radarMetrics:[5,5,5,7,6]
+  },
+  {
+    id:'s6', label:"The other party is using pressure tactics, artificial urgency, or aggressive behavior.",
+    title:"Under Pressure — Hard Tactics", icon:"fa-bolt", color:"yellow",
+    strategy:"Principled defense — stay calm",
+    description:"Hard tactics work when you panic. The antidote is recognizing the tactic, naming it calmly, and returning to interests and objective standards — without matching aggression.",
+    howTo:[
+      { step:"Name the tactic — it defuses it", detail:"'It seems like we're under artificial time pressure here. I'd rather take more time and get this right than rush into something suboptimal for both of us.' Naming a tactic neutralizes it without accusation." },
+      { step:"Return to objective standards immediately", detail:"'Let's look at what comparable agreements in this industry look like.' Objective criteria remove emotion and give both sides rational ground. Hard negotiators hate objective standards." },
+      { step:"Separate people from the problem", detail:"Fisher & Ury's core principle: Be hard on the problem, soft on the person. Don't match aggression — it escalates. Stay warm, stay firm on substance. Confusion disarms bullies." },
+      { step:"Your BATNA is your psychological anchor", detail:"Before and during every session, remind yourself clearly: 'I can walk away and be fine.' This single thought gives you the calm to not react to pressure. No BATNA = build one urgently." }
+    ],
+    radarMetrics:[5,8,3,8,9]
+  },
+  {
+    id:'s7', label:"We are stuck — neither side is moving and talks have hit a wall.",
+    title:"Deadlock — Impasse", icon:"fa-arrows-split-up-and-left", color:"teal",
+    strategy:"Reframe & get creative",
+    description:"Impasses usually mean both sides are locked on positions, not interests. The fix is shifting from positional bargaining to interest exploration and creative package deals.",
+    howTo:[
+      { step:"Take a strategic break", detail:"'Let's pause and reconnect next week.' Time often softens positions. New circumstances may shift dynamics in your favor — or theirs. Walking away briefly is not weakness; it's strategy." },
+      { step:"Make Multiple Equivalent Simultaneous Offers (MESO)", detail:"Offer 2–3 packages of equal value to you but different in structure. Their preference reveals hidden priorities, creating new trading currency you didn't know existed." },
+      { step:"Change the variable — not just the number", detail:"If price is stuck, change scope, timeline, payment schedule, risk-sharing, warranties, or volume commitment. Impasses on one dimension often break when you introduce a new one entirely." },
+      { step:"Bring in a neutral third party", detail:"A mediator or respected mutual contact can break deadlocks that direct negotiation cannot. It removes face-saving concerns — neither side feels they 'gave in'; they 'followed the mediator.'" }
+    ],
+    radarMetrics:[5,5,4,10,8]
+  }
+];
+
+// ============= RADAR CHART =============
+const ctx = document.getElementById('batnaRadar').getContext('2d');
+const radarChart = new Chart(ctx, {
+  type:'radar',
+  data:{
+    labels:['Your\nLeverage','Their\nLeverage','Mutual\nInterest','Flexibility\nNeeded','Risk\nLevel'],
+    datasets:[{ label:'Current Dynamic', data:[0,0,0,0,0],
+      backgroundColor:'rgba(37,99,235,0.15)', borderColor:'rgba(37,99,235,0.8)',
+      pointBackgroundColor:'#1d4ed8', pointBorderColor:'#fff',
+      pointHoverBackgroundColor:'#fff', pointHoverBorderColor:'#1d4ed8', borderWidth:2.5
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    scales:{ r:{ min:0, max:10, angleLines:{ color:'rgba(0,0,0,0.08)' }, grid:{ color:'rgba(0,0,0,0.06)' },
+      pointLabels:{ font:{ family:'Inter', size:10, weight:'500' }, color:'#6b7280' },
+      ticks:{ display:false }
+    }},
+    plugins:{ legend:{ display:false }, tooltip:{ backgroundColor:'rgba(17,24,39,0.9)', padding:10, bodyFont:{ family:'Inter' },
+      callbacks:{ label:(c)=>` ${c.label}: ${c.raw}/10` }
+    }}
+  }
+});
+
+// ============= RENDER CHECKLIST =============
+const container = document.getElementById('checklist-container');
+scenarios.forEach(s => {
+  const c = colorMap[s.color];
+  const lbl = document.createElement('label');
+  lbl.className = 'flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer transition-all';
+  lbl.innerHTML = `
+    <input type="checkbox" class="custom-checkbox" value="${s.id}">
+    <span class="text-sm text-gray-700 font-medium select-none leading-snug">${s.label}</span>
+  `;
+  container.appendChild(lbl);
+});
+
+document.querySelectorAll('.custom-checkbox').forEach(cb => cb.addEventListener('change', updateResults));
+
+function updateResults() {
+  const selected = [...document.querySelectorAll('.custom-checkbox:checked')].map(c => c.value);
+  const empty = document.getElementById('empty-state');
+  const area = document.getElementById('results-area');
+  const list = document.getElementById('rec-list');
+
+  // Update label styles
+  document.querySelectorAll('.custom-checkbox').forEach(cb => {
+    const lbl = cb.closest('label');
+    if(cb.checked){ lbl.classList.add('border-blue-400','bg-blue-50/40'); lbl.classList.remove('border-gray-200'); }
+    else { lbl.classList.remove('border-blue-400','bg-blue-50/40'); lbl.classList.add('border-gray-200'); }
+  });
+
+  if(!selected.length) {
+    empty.classList.remove('hidden'); area.classList.add('hidden');
+    radarChart.data.datasets[0].data = [0,0,0,0,0]; radarChart.update(); return;
+  }
+
+  empty.classList.add('hidden'); area.classList.remove('hidden');
+  document.getElementById('sel-count').textContent = `${selected.length} scenario${selected.length>1?'s':''} selected`;
+  list.innerHTML='';
+
+  let avgMetrics = [0,0,0,0,0];
+  selected.forEach(id => {
+    const s = scenarios.find(x=>x.id===id);
+    if(!s) return;
+    s.radarMetrics.forEach((v,i)=>avgMetrics[i]+=v);
+    const c = colorMap[s.color];
+    const card = document.createElement('div');
+    card.className = 'fade-in rounded-xl border overflow-hidden';
+    card.style.cssText = `background:${c.bg};border-color:${c.border}`;
+
+    const howToItems = s.howTo.map((h,i)=>`
+      <div class="flex gap-3 items-start p-3 ${i<s.howTo.length-1?'border-b':''}` + `" style="border-color:${c.border}">
+        <div class="step-num" style="background:${c.icon}">${i+1}</div>
+        <div><p class="text-sm font-semibold" style="color:${c.badgeTxt}">${h.step}</p><p class="text-xs text-gray-600 mt-0.5 leading-relaxed">${h.detail}</p></div>
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="flex items-start gap-3 p-4">
+        <div class="p-2.5 rounded-lg bg-white shadow-sm shrink-0"><i class="fas ${s.icon} text-lg" style="color:${c.icon}"></i></div>
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <h4 class="font-bold text-gray-900 text-sm">${s.title}</h4>
+            <span class="badge text-xs" style="background:${c.badge};color:${c.badgeTxt}">${s.strategy}</span>
+          </div>
+          <p class="text-xs text-gray-600 leading-relaxed">${s.description}</p>
+        </div>
+      </div>
+      <button onclick="toggleHowTo(this)" class="w-full flex items-center justify-between px-4 py-2.5 border-t text-xs font-semibold transition-colors" style="border-color:${c.border};color:${c.icon};background:rgba(255,255,255,0.5)">
+        <span><i class="fas fa-list-check mr-1.5"></i>How to do it (${s.howTo.length} steps)</span>
+        <i class="fas fa-chevron-down transition-transform"></i>
+      </button>
+      <div class="howto-body" style="border-top:1px solid ${c.border}">
+        ${howToItems}
+      </div>`;
+    list.appendChild(card);
+  });
+
+  radarChart.data.datasets[0].data = avgMetrics.map(v=>+(v/selected.length).toFixed(1));
+  radarChart.update();
+}
+
+function toggleHowTo(btn) {
+  const body = btn.nextElementSibling;
+  const icon = btn.querySelector('.fa-chevron-down');
+  body.classList.toggle('open');
+  icon.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+// ============= BATNA BUILDER =============
+let altCount = 0;
+const alternatives = {};
+
+function addAlternative() {
+  altCount++;
+  const id = 'alt-' + altCount;
+  alternatives[id] = { name:'', rating:5 };
+
+  const div = document.createElement('div');
+  div.className = 'alt-row';
+  div.id = id;
+  div.innerHTML = `
+    <div class="flex gap-2 items-center mb-2">
+      <input type="text" placeholder="Describe this alternative..." value=""
+        oninput="alternatives['${id}'].name=this.value;updateBATNA()"
+        class="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-400">
+      <button onclick="removeAlt('${id}')" class="text-gray-300 hover:text-red-400 transition-colors px-1">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>`;
+  document.getElementById('alt-list').appendChild(div);
+  document.getElementById('rating-list').innerHTML = '';
+  renderRatings();
+  updateBATNA();
+}
+
+function removeAlt(id) {
+  delete alternatives[id];
+  const el = document.getElementById(id);
+  if(el) el.remove();
+  renderRatings();
+  updateBATNA();
+}
+
+function renderRatings() {
+  const list = document.getElementById('rating-list');
+  list.innerHTML = '';
+  Object.keys(alternatives).forEach(id => {
+    const altEl = document.getElementById(id);
+    if(!altEl) return;
+    const name = alternatives[id].name || `Alternative ${id.split('-')[1]}`;
+    const rating = alternatives[id].rating;
+    const div = document.createElement('div');
+    div.className = 'mb-4';
+    div.innerHTML = `
+      <div class="flex justify-between text-xs mb-1">
+        <span class="font-medium text-gray-700 truncate pr-2">${name}</span>
+        <span class="font-bold text-blue-600 shrink-0" id="r-val-${id}">${rating}/10</span>
+      </div>
+      <input type="range" min="1" max="10" value="${rating}" step="1"
+        oninput="alternatives['${id}'].rating=+this.value;document.getElementById('r-val-${id}').textContent=this.value+'/10';updateBATNA()">
+      <div class="flex justify-between text-xs text-gray-300 mt-0.5"><span>Terrible</span><span>Excellent</span></div>`;
+    list.appendChild(div);
+  });
+}
+
+function updateBATNA() {
+  const keys = Object.keys(alternatives).filter(k => document.getElementById(k));
+  const result = document.getElementById('batna-result');
+  const stats = document.getElementById('batna-stats');
+
+  if(!keys.length) {
+    result.innerHTML = '<p class="text-gray-400 text-sm">Add and rate alternatives to reveal your BATNA</p>';
+    stats.style.display = 'none'; return;
+  }
+
+  let best = null, bestRating = -1;
+  keys.forEach(k => {
+    if(alternatives[k].rating > bestRating) { bestRating = alternatives[k].rating; best = k; }
+  });
+  const avgRating = keys.reduce((s,k)=>s+alternatives[k].rating,0)/keys.length;
+  const bestName = alternatives[best].name || `Alternative ${best.split('-')[1]}`;
+
+  const color = bestRating>=8?'green':bestRating>=5?'blue':'red';
+  const colors = { green:{bg:'#f0fdf4',border:'#86efac',txt:'#166534',badge:'#dcfce7',badgeTxt:'#15803d'}, blue:{bg:'#eff6ff',border:'#93c5fd',txt:'#1e40af',badge:'#dbeafe',badgeTxt:'#1d4ed8'}, red:{bg:'#fef2f2',border:'#fca5a5',txt:'#991b1b',badge:'#fee2e2',badgeTxt:'#dc2626'} };
+  const cl = colors[color];
+  const strength = bestRating>=8?'Strong':'Medium';
+
+  result.innerHTML = `
+    <div class="rounded-xl border-2 p-4 text-left" style="background:${cl.bg};border-color:${cl.border}">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider" style="color:${cl.txt}">Your BATNA</span>
+        <span class="badge" style="background:${cl.badge};color:${cl.badgeTxt}">${strength} · ${bestRating}/10</span>
+      </div>
+      <p class="font-bold" style="color:${cl.txt}">${bestName || 'Unnamed alternative'}</p>
+      <p class="text-xs mt-2" style="color:${cl.txt};opacity:.8">This is your walk-away option. Any deal worse than this should be rejected.</p>
+    </div>`;
+
+  stats.style.display = 'grid';
+  document.getElementById('stat-count').textContent = keys.length;
+  document.getElementById('stat-best').textContent = bestRating + '/10';
+  document.getElementById('stat-avg').textContent = avgRating.toFixed(1);
+}
+
+// ============= REVEAL/CONCEAL LOGIC =============
+const decisions = {};
+function selectDecision(btn) {
+  const q = btn.dataset.q, v = btn.dataset.v;
+  decisions[q] = v;
+  document.querySelectorAll(`[data-q="${q}"]`).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateRevealRec();
+}
+function updateRevealRec() {
+  const rec = document.getElementById('reveal-rec');
+  const str = decisions['q1'], stage = decisions['q2'];
+  if(!str||!stage) return;
+  rec.classList.remove('hidden');
+
+  const matrix = {
+    'strong-early': { text:"Hold back. Too early to reveal. Let them wonder. Surface it only if talks stall.", color:'bg-amber-50 border-amber-200 text-amber-800', icon:'fa-eye-slash' },
+    'strong-mid':   { text:"You can hint at it. 'I'm comparing this with another strong option.' Don't reveal specifics yet.", color:'bg-blue-50 border-blue-200 text-blue-800', icon:'fa-eye' },
+    'strong-late':  { text:"Now is the time. Revealing a strong BATNA at the closing stage creates urgency without threats.", color:'bg-green-50 border-green-200 text-green-800', icon:'fa-check' },
+    'medium-early': { text:"Don't reveal. Keep working to strengthen it while maintaining a confident posture.", color:'bg-gray-50 border-gray-200 text-gray-700', icon:'fa-eye-slash' },
+    'medium-mid':   { text:"Be vague. 'I'm evaluating a few options.' Don't give details — they may probe and find weaknesses.", color:'bg-blue-50 border-blue-200 text-blue-800', icon:'fa-eye' },
+    'medium-late':  { text:"Hint, don't specify. Use it for psychological leverage only. Revealing the details risks devaluing it.", color:'bg-amber-50 border-amber-200 text-amber-800', icon:'fa-exclamation' },
+    'weak-early':   { text:"Never reveal. Your most important job right now is building a better alternative before continuing.", color:'bg-red-50 border-red-200 text-red-800', icon:'fa-ban' },
+    'weak-mid':     { text:"Never reveal. Use the phrase 'I'm exploring options' repeatedly. Consider pausing to strengthen your position.", color:'bg-red-50 border-red-200 text-red-800', icon:'fa-ban' },
+    'weak-late':    { text:"Still don't reveal. If you must close, try to create perception of alternatives: 'I have a board meeting this week to finalize our direction.'", color:'bg-red-50 border-red-200 text-red-800', icon:'fa-shield-halved' },
+  };
+
+  const key = str+'-'+stage;
+  const m = matrix[key] || { text:'Select both options above.', color:'bg-gray-50 border-gray-200 text-gray-600', icon:'fa-circle-question' };
+  rec.className = `mt-4 rounded-xl p-3 text-sm border ${m.color}`;
+  rec.innerHTML = `<i class="fas ${m.icon} mr-2"></i>${m.text}`;
+}
+
+// ============= ZOPA VISUALIZER =============
+function updateZOPA() {
+  const myMin = +document.getElementById('my-min').value;
+  const theirMax = +document.getElementById('their-max').value;
+  document.getElementById('my-min-val').textContent = myMin;
+  document.getElementById('their-max-val').textContent = theirMax;
+
+  const myM = document.getElementById('my-marker');
+  const thM = document.getElementById('their-marker');
+  const fill = document.getElementById('zopa-fill');
+  const verdict = document.getElementById('zopa-verdict');
+
+  myM.style.left = myMin + '%';
+  thM.style.left = theirMax + '%';
+
+  if(theirMax > myMin) {
+    const left = Math.min(myMin, theirMax);
+    const right = Math.max(myMin, theirMax);
+    fill.style.left = left + '%';
+    fill.style.width = (right-left) + '%';
+    fill.style.background = '#22c55e';
+    fill.style.opacity = '0.35';
+    verdict.className = 'rounded-xl p-4 text-sm font-medium text-center bg-green-50 border border-green-200 text-green-800';
+    verdict.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i><strong>ZOPA exists!</strong> There is a ${right-left}-point overlap. A deal is theoretically possible. Focus on creative terms within this range.`;
+  } else if(theirMax === myMin) {
+    fill.style.width = '0';
+    verdict.className = 'rounded-xl p-4 text-sm font-medium text-center bg-amber-50 border border-amber-200 text-amber-800';
+    verdict.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500 mr-2"></i><strong>Knife-edge situation.</strong> There is exactly one possible deal point. Any deal requires both sides to accept this single value precisely.`;
+  } else {
+    const gap = myMin - theirMax;
+    fill.style.left = theirMax + '%';
+    fill.style.width = (myMin-theirMax) + '%';
+    fill.style.background = '#ef4444';
+    fill.style.opacity = '0.25';
+    verdict.className = 'rounded-xl p-4 text-sm font-medium text-center bg-red-50 border border-red-200 text-red-800';
+    verdict.innerHTML = `<i class="fas fa-times-circle text-red-500 mr-2"></i><strong>No ZOPA.</strong> There is a ${gap}-point gap. No deal is possible at current positions. Someone must change their reservation price — or create value through creative terms.`;
+  }
+}
+updateZOPA();
+
+// ============= PRE-NEGOTIATION CHECKLIST =============
+const preItems = [
+  "Identified and written down my BATNA clearly",
+  "Rated my BATNA strength honestly (not optimistically)",
+  "Researched the other party's likely BATNA and alternatives",
+  "Defined my reservation price (minimum acceptable deal)",
+  "Identified at least 3 alternative options if talks fail",
+  "Prepared objective criteria / market benchmarks to reference",
+  "Listed the other party's likely interests (not just their positions)",
+  "Planned my opening offer and anchoring strategy",
+  "Prepared 2-3 MESO package offers to use if needed",
+  "Decided what I will NOT reveal about my situation",
+  "Practiced walking away calmly in my mind",
+];
+
+const preList = document.getElementById('pre-checklist');
+preItems.forEach(item => {
+  const div = document.createElement('label');
+  div.className = 'flex items-start gap-3 p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors';
+  div.innerHTML = `
+    <input type="checkbox" class="custom-checkbox mt-0.5" onchange="updatePreProgress()">
+    <span class="text-sm text-gray-700 select-none leading-snug">${item}</span>`;
+  preList.appendChild(div);
+});
+
+// Add progress bar to playbook
+const progBar = document.createElement('div');
+progBar.innerHTML = `
+  <div class="mt-4 pt-4 border-t border-gray-100">
+    <div class="flex justify-between text-xs text-gray-500 mb-1.5">
+      <span>Preparation progress</span><span id="prep-pct">0%</span>
+    </div>
+    <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div id="prep-bar" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width:0"></div></div>
+  </div>`;
+preList.parentElement.appendChild(progBar);
+
+function updatePreProgress() {
+  const total = preItems.length;
+  const checked = document.querySelectorAll('#pre-checklist input:checked').length;
+  const pct = Math.round(checked/total*100);
+  document.getElementById('prep-pct').textContent = pct + '%';
+  document.getElementById('prep-bar').style.width = pct + '%';
+  document.getElementById('prep-bar').style.background = pct>=80?'#22c55e':pct>=50?'#3b82f6':'#f59e0b';
+}
+</script>
+</body>
+</html>
