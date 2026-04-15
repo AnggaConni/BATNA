@@ -4,11 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO Meta Tags -->
-    <title>What is BATNA? Master Negotiation & Improve Your Leverage</title>
-    <meta name="description" content="Learn exactly what is BATNA, explore real-world BATNA negotiation examples, and discover how to improve BATNA with our free interactive Strategy Planner Pro tool.">
-    <meta name="keywords" content="what is BATNA, BATNA negotiation example, how to improve BATNA, negotiation strategy, ZOPA">
-    
+    <!-- Essential SEO Meta Tags -->
+    <title>What is BATNA? Master Negotiation Strategy & Improve Your Leverage</title>
+    <meta name="description" content="Learn exactly what is BATNA, explore real-world BATNA negotiation examples, and discover how to improve your leverage with our free Strategy Planner Pro tool.">
+    <meta name="keywords" content="what is BATNA, BATNA negotiation example, how to improve BATNA, negotiation strategy, ZOPA, WATNA, reservation price, getting to yes">
+    <meta name="author" content="BATNA Strategy Tools">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="https://yourwebsite.com/batna-negotiation-guide"> <!-- Ganti dengan URL asli Anda -->
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/batna-negotiation-guide">
+    <meta property="og:title" content="What is BATNA? Master Negotiation Strategy & Improve Leverage">
+    <meta property="og:description" content="Stop guessing your leverage. Map your alternatives, visualize your power dynamics, and confidently walk into any deal with our ultimate guide and tool.">
+    <meta property="og:image" content="https://yourwebsite.com/assets/batna-og-image.jpg"> <!-- Ganti dengan URL gambar Anda -->
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourwebsite.com/batna-negotiation-guide">
+    <meta property="twitter:title" content="What is BATNA? Master Negotiation Strategy & Improve Leverage">
+    <meta property="twitter:description" content="Stop guessing your leverage. Map your alternatives, visualize your power dynamics, and confidently walk into any deal.">
+    <meta property="twitter:image" content="https://yourwebsite.com/assets/batna-og-image.jpg">
+
+    <!-- Schema.org Markup for SEO -->
+    <!-- 1. Software Application Schema (For your App) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "BATNA Planner Pro",
+      "operatingSystem": "Web",
+      "applicationCategory": "BusinessApplication",
+      "description": "An interactive strategy planner to map your negotiation leverage, visualize ZOPA, and calculate your Best Alternative to a Negotiated Agreement.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <!-- 2. FAQ Schema for Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity":[{
+        "@type": "Question",
+        "name": "Can my BATNA change during a negotiation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, absolutely. BATNA is dynamic. As time passes, new alternatives may appear, or existing ones may expire. You should constantly monitor and attempt to improve your BATNA throughout the entire negotiation lifecycle."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Should I reveal my BATNA to the other party?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only if it is exceptionally strong. Revealing a strong BATNA anchors your power and shows you cannot be easily pressured. However, if your BATNA is weak, keep it strictly confidential to prevent the other party from exploiting your lack of options."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between BATNA and WATNA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "BATNA stands for Best Alternative To a Negotiated Agreement, representing your ideal backup plan. WATNA stands for Worst Alternative To a Negotiated Agreement, representing the absolute worst-case scenario if the deal falls through. Knowing both helps you define your acceptable risk boundaries."
+        }
+      }]
+    }
+    </script>
+
     <!-- Tailwind CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -18,7 +83,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: { sans:['Inter', 'sans-serif'] },
                     colors: {
                         brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a' }
                     }
@@ -41,6 +106,14 @@
             50% { transform: translateY(-15px); }
             100% { transform: translateY(0px); }
         }
+        /* Custom styles for the FAQ Details element */
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary ~ * { animation: sweep .3s ease-in-out; }
+        @keyframes sweep {
+            0%    {opacity: 0; transform: translateY(-10px)}
+            100%  {opacity: 1; transform: translateY(0)}
+        }
     </style>
 </head>
 <body class="text-gray-800 font-sans antialiased bg-white">
@@ -49,22 +122,26 @@
     <header class="border-b border-gray-100 bg-white/80 backdrop-blur-md fixed top-0 w-full z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <div class="bg-blue-600 text-white p-2 rounded-lg"><i class="fas fa-chess-knight"></i></div>
+                <div class="bg-blue-600 text-white p-2 rounded-lg" aria-hidden="true">
+                    <i class="fas fa-chess-knight"></i>
+                </div>
                 <span class="font-bold text-xl tracking-tight text-gray-900">BATNA Pro</span>
             </div>
-            <nav class="hidden md:flex gap-6 text-sm font-medium text-gray-600">
+            <nav class="hidden md:flex gap-6 text-sm font-medium text-gray-600" aria-label="Main Navigation">
                 <a href="#what-is-batna" class="hover:text-blue-600 transition">Concept</a>
+                <a href="#how-to-find" class="hover:text-blue-600 transition">How-To</a>
                 <a href="#examples" class="hover:text-blue-600 transition">Use Cases</a>
                 <a href="#insights" class="hover:text-blue-600 transition">Insights</a>
+                <a href="#faq" class="hover:text-blue-600 transition">FAQ</a>
             </nav>
-            <a href="batna.html" class="bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-sm">
+            <a href="batna.html" aria-label="Open BATNA App" class="bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-sm">
                 Open App
             </a>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero-pattern pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
+    <section class="hero-pattern pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden" aria-label="Introduction">
         <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             
             <!-- Hero Text -->
@@ -74,18 +151,17 @@
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                     </span>
-                    Harvard Principled Negotiation Framework
+                    Based on Harvard Principled Negotiation Framework
                 </div>
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
                     Never negotiate from a place of <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">weakness again.</span>
                 </h1>
                 <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-                    Stop guessing your leverage. Map your alternatives, visualize your power dynamics, and confidently walk into any deal with our interactive strategy planner.
+                    Stop guessing your leverage. Understand what is BATNA, map your alternatives, visualize your power dynamics, and confidently walk into any deal with our interactive strategy planner.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <!-- CTA Button pointing to the app -->
                     <a href="batna.html" class="inline-flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl text-base font-semibold transition shadow-lg shadow-blue-500/30">
-                        Launch Planner Pro <i class="fas fa-arrow-right"></i>
+                        Launch Planner Pro <i class="fas fa-arrow-right" aria-hidden="true"></i>
                     </a>
                     <a href="#what-is-batna" class="inline-flex justify-center items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-8 py-3.5 rounded-xl text-base font-semibold transition shadow-sm">
                         Learn the Framework
@@ -94,7 +170,7 @@
             </div>
 
             <!-- Hero Dummy Illustration (CSS/SVG Mockup) -->
-            <div class="relative lg:ml-auto w-full max-w-md float-animation">
+            <div class="relative lg:ml-auto w-full max-w-md float-animation" aria-hidden="true">
                 <div class="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-purple-50 rounded-3xl blur-2xl opacity-50"></div>
                 
                 <!-- Mockup App Card -->
@@ -125,7 +201,6 @@
                                 <line x1="50" y1="50" x2="75" y2="90" stroke="#e5e7eb" stroke-width="1"/>
                                 <line x1="50" y1="50" x2="25" y2="90" stroke="#e5e7eb" stroke-width="1"/>
                                 <line x1="50" y1="50" x2="5" y2="35" stroke="#e5e7eb" stroke-width="1"/>
-                                <!-- Data Polygon -->
                                 <polygon points="50,15 85,38 70,85 30,70 15,45" fill="rgba(37,99,235,0.2)" stroke="currentColor" stroke-width="2"/>
                                 <circle cx="50" cy="15" r="2.5" fill="currentColor"/>
                                 <circle cx="85" cy="38" r="2.5" fill="currentColor"/>
@@ -144,7 +219,6 @@
                             <div class="h-4 bg-gray-100 rounded-full relative overflow-hidden">
                                 <div class="absolute left-0 top-0 bottom-0 w-[40%] bg-blue-100"></div>
                                 <div class="absolute right-0 top-0 bottom-0 w-[20%] bg-orange-100"></div>
-                                <!-- The ZOPA Overlap -->
                                 <div class="absolute left-[40%] right-[20%] top-0 bottom-0 bg-green-400 opacity-60 flex items-center justify-center">
                                     <span class="text-[8px] font-bold text-green-900">ZOPA</span>
                                 </div>
@@ -173,37 +247,90 @@
     <main class="max-w-4xl mx-auto px-4 py-16 space-y-24">
         
         <!-- Section 1: What is BATNA -->
-        <section id="what-is-batna" class="scroll-mt-24">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">What is BATNA? (Simple + Story)</h2>
+        <article id="what-is-batna" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-blue-600 pl-4">What is BATNA? (Simple Definition & Story)</h2>
             <div class="prose prose-lg text-gray-600 max-w-none">
-                <p>If you have ever asked yourself <strong>"what is BATNA"</strong>, you are already on your way to becoming a better negotiator. Coined by Roger Fisher and William Ury in their seminal book <em>Getting to Yes</em>, BATNA stands for <strong>Best Alternative To a Negotiated Agreement</strong>.</p>
-                <p>In simple terms, it is the absolute best thing you can do if the current negotiation completely fails. It is your ultimate backup plan, and secretly, it is the true source of your negotiating power.</p>
+                <p>If you have ever asked yourself <strong>"what is BATNA"</strong>, you are already on your way to becoming a better negotiator. Coined by negotiation experts Roger Fisher and William Ury in their seminal 1981 book <em>Getting to Yes: Negotiating Agreement Without Giving In</em>, BATNA stands for <strong>Best Alternative To a Negotiated Agreement</strong>.</p>
+                <p>In simple terms, it is the absolute best course of action you can take if the current negotiation completely fails and no agreement can be reached. It is your ultimate backup plan, and secretly, it is the true source of your negotiating power. The stronger your BATNA, the more leverage you hold.</p>
                 
-                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6 mt-8">
+                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6 mt-8 shadow-sm">
                     <h3 class="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
-                        <i class="fas fa-car text-blue-500"></i> The Car Buyer's Story
+                        <i class="fas fa-car text-blue-500" aria-hidden="true"></i> The Car Buyer's Story
                     </h3>
-                    <p class="text-sm text-blue-800 mb-3">Imagine you are buying a used car from a dealer. You find a car you like, priced at $10,000. You want it for $8,000.</p>
-                    <ul class="text-sm text-blue-800 space-y-2 list-disc pl-5">
-                        <li><strong>Scenario A (No BATNA):</strong> You have no other car in mind. Your old car is broken. You <em>need</em> this car today. The dealer senses your desperation. You will likely pay close to $10,000.</li>
-                        <li><strong>Scenario B (Strong BATNA):</strong> Yesterday, you found a very similar car at another dealership for $8,500. They are holding it for you until 5 PM today.</li>
+                    <p class="text-sm text-blue-800 mb-3">Imagine you are buying a used car from a dealer. You find a car you like, priced at $10,000. You want to negotiate it down to $8,000.</p>
+                    <ul class="text-sm text-blue-800 space-y-2 list-disc pl-5 mb-4">
+                        <li><strong>Scenario A (No BATNA):</strong> You have no other car in mind. Your old car is broken. You <em>need</em> this vehicle today to get to work. The dealer senses your desperation. Because you lack an alternative, you will likely pay close to the asking price of $10,000.</li>
+                        <li><strong>Scenario B (Strong BATNA):</strong> Yesterday, you found a very similar car at another dealership across town for $8,500. They are holding it for you until 5 PM today.</li>
                     </ul>
-                    <p class="text-sm text-blue-800 mt-3 font-semibold">
-                        In Scenario B, your BATNA is buying the other car for $8,500. Because you know exactly what is BATNA in this context, you can confidently tell the first dealer: "I'll give you $8,000 right now. If not, no hard feelings, I'm buying another car this afternoon." You don't have to pretend; you actually have the power to walk away.
+                    <p class="text-sm text-blue-800 font-semibold border-t border-blue-200 pt-3">
+                        In Scenario B, your BATNA is buying the other car for $8,500. Because you know exactly what is BATNA in this context, you can confidently tell the first dealer: "I'll give you $8,000 right now. If not, no hard feelings, I'm buying another car this afternoon for $8,500." You don't have to bluff or pretend; you actually have the power to walk away.
                     </p>
+                </div>
+            </div>
+        </article>
+
+        <!-- New Section: How to Find Your BATNA -->
+        <section id="how-to-find" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-indigo-500 pl-4">How to Improve BATNA in 4 Actionable Steps</h2>
+            <p class="text-lg text-gray-600 mb-8">Knowing the concept isn't enough. Preparing for a negotiation requires a systematic approach. Here is exactly <strong>how to improve BATNA</strong> before you sit down at the table:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex gap-4 p-5 border border-gray-100 rounded-xl bg-white shadow-sm hover:shadow-md transition">
+                    <div class="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-lg">1</div>
+                    <div>
+                        <h3 class="font-bold text-gray-900 mb-1">List All Alternatives</h3>
+                        <p class="text-sm text-gray-600">Brainstorm every possible action you could take if no agreement is reached. Think outside the box. Nothing is too crazy at this stage.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-5 border border-gray-100 rounded-xl bg-white shadow-sm hover:shadow-md transition">
+                    <div class="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                    <div>
+                        <h3 class="font-bold text-gray-900 mb-1">Evaluate Your Options</h3>
+                        <p class="text-sm text-gray-600">Examine the feasibility, cost, and psychological toll of each alternative. Discard the ones that are impractical or too expensive.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-5 border border-gray-100 rounded-xl bg-white shadow-sm hover:shadow-md transition">
+                    <div class="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                    <div>
+                        <h3 class="font-bold text-gray-900 mb-1">Select Your Best Alternative</h3>
+                        <p class="text-sm text-gray-600">Choose the single most promising option from your filtered list. This specific option officially becomes your BATNA.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-5 border border-gray-100 rounded-xl bg-white shadow-sm hover:shadow-md transition">
+                    <div class="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-lg">4</div>
+                    <div>
+                        <h3 class="font-bold text-gray-900 mb-1">Calculate Reservation Price</h3>
+                        <p class="text-sm text-gray-600">Based on your BATNA, determine your exact walk-away point (Reservation Price). If the deal drops below this metric, you execute your BATNA.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: BATNA vs ZOPA vs WATNA -->
+        <section id="terminologies" class="scroll-mt-24 bg-gray-50 p-8 rounded-3xl border border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">BATNA vs ZOPA vs WATNA: The Negotiation Trifecta</h2>
+            <p class="text-gray-600 mb-6">To build an unbreakable negotiation strategy, you must understand how BATNA relates to other core negotiation concepts:</p>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="font-bold text-lg text-gray-800">ZOPA (Zone of Possible Agreement)</h3>
+                    <p class="text-gray-600 text-sm mt-1">ZOPA is the overlap between the two parties' acceptable ranges. For example, if a buyer's maximum budget is $100 and a seller's absolute minimum price is $80, the ZOPA is between $80 and $100. Your BATNA helps you establish where your end of the ZOPA stops.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-gray-800">WATNA (Worst Alternative To a Negotiated Agreement)</h3>
+                    <p class="text-gray-600 text-sm mt-1">While BATNA is your best backup plan, WATNA is your worst-case scenario if negotiations break down (e.g., getting sued, going bankrupt, or losing your job). Knowing your WATNA prevents you from making irrational, ego-driven decisions to walk away when your backup options are terrible.</p>
                 </div>
             </div>
         </section>
 
         <!-- Section 2: Use Cases -->
         <section id="examples" class="scroll-mt-24">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-green-500 pl-4">Real-World Use Cases</h2>
-            <p class="text-lg text-gray-600 mb-8">Looking for a practical <strong>BATNA negotiation example</strong>? The concept applies far beyond buying cars. Here is how it manifests across different domains:</p>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-green-500 pl-4">Real-World BATNA Negotiation Examples</h2>
+            <p class="text-lg text-gray-600 mb-8">Looking for a practical <strong>BATNA negotiation example</strong>? The concept applies far beyond buying cars or flea market haggling. Here is how it manifests across complex domains:</p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Use Case 1 -->
                 <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl mb-4">
+                    <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl mb-4" aria-hidden="true">
                         <i class="fas fa-globe"></i>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 mb-2">Public Policy & Treaty</h3>
@@ -213,22 +340,22 @@
                 </div>
                 <!-- Use Case 2 -->
                 <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-4">
+                    <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-4" aria-hidden="true">
                         <i class="fas fa-briefcase"></i>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 mb-2">Business & Salary</h3>
                     <p class="text-sm text-gray-600 leading-relaxed">
-                        A classic <em>BATNA negotiation example</em> is salary negotiation. If you are negotiating a raise, your BATNA is a written job offer from a competitor offering a 15% increase. You negotiate from a position of security, not hope.
+                        A classic <em>BATNA negotiation example</em> is salary negotiation. If you are negotiating a raise with your boss, your BATNA is a written job offer from a competitor offering a 15% increase. You negotiate from a position of security, not hope.
                     </p>
                 </div>
                 <!-- Use Case 3 -->
                 <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl mb-4">
+                    <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl mb-4" aria-hidden="true">
                         <i class="fas fa-brain"></i>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 mb-2">Behavioral Psychology</h3>
                     <p class="text-sm text-gray-600 leading-relaxed">
-                        BATNA affects everyday interpersonal behavior. In personal boundaries or dating, knowing you are perfectly happy being alone (a strong personal BATNA) prevents you from accepting toxic behavior just to avoid conflict.
+                        BATNA affects everyday interpersonal behavior. In setting personal boundaries, knowing you are perfectly happy being alone (a strong personal BATNA) prevents you from accepting toxic behavior just to avoid conflict.
                     </p>
                 </div>
             </div>
@@ -238,50 +365,94 @@
         <section id="insights" class="scroll-mt-24">
             <h2 class="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-purple-500 pl-4">Horizon Scanning: The Future of Leverage</h2>
             <div class="bg-gray-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+                <!-- Decorative Background Element -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2" aria-hidden="true"></div>
                 
-                <p class="text-gray-300 text-lg mb-6 relative z-10">
-                    If you are wondering <strong>how to improve BATNA</strong> in a fast-changing world, the old rules of holding cards close to your chest are evolving. As we scan the horizon of modern negotiation dynamics, three major shifts are occurring:
+                <p class="text-gray-300 text-lg mb-8 relative z-10">
+                    If you are wondering <strong>how to improve BATNA</strong> in a fast-changing digital world, the old rules of holding cards close to your chest are evolving. As we scan the horizon of modern negotiation dynamics, three major shifts are occurring:
                 </p>
                 
                 <div class="space-y-6 relative z-10">
                     <div class="flex gap-4 items-start">
-                        <div class="mt-1 text-purple-400"><i class="fas fa-database text-xl"></i></div>
+                        <div class="mt-1 text-purple-400" aria-hidden="true"><i class="fas fa-database text-xl"></i></div>
                         <div>
                             <h4 class="font-bold text-white text-lg">1. Data-Driven Asymmetry</h4>
-                            <p class="text-sm text-gray-400 mt-1">Information asymmetry used to protect weak BATNAs. Today, AI and big data allow your counterpart to estimate your alternatives accurately. To improve your BATNA, you must actually <em>build</em> it in reality, not just bluff it.</p>
+                            <p class="text-sm text-gray-400 mt-1">Information asymmetry used to protect weak BATNAs. Today, AI, LinkedIn, and big data allow your counterpart to estimate your alternatives accurately. To improve your BATNA, you must actually <em>build</em> it in reality, not just bluff about it.</p>
                         </div>
                     </div>
                     <div class="flex gap-4 items-start">
-                        <div class="mt-1 text-purple-400"><i class="fas fa-network-wired text-xl"></i></div>
+                        <div class="mt-1 text-purple-400" aria-hidden="true"><i class="fas fa-network-wired text-xl"></i></div>
                         <div>
                             <h4 class="font-bold text-white text-lg">2. Decentralized Alternatives</h4>
-                            <p class="text-sm text-gray-400 mt-1">The gig economy, remote work, and micro-agreements mean your alternative is rarely "nothing." To improve your BATNA, fractionate your needs. Don't rely on one giant deal; string together multiple smaller, decentralized alternatives.</p>
+                            <p class="text-sm text-gray-400 mt-1">The gig economy, remote work, and micro-agreements mean your alternative is rarely "nothing." To improve your BATNA, fractionate your needs. Don't rely on one giant deal; string together multiple smaller, decentralized alternatives to reduce dependency.</p>
                         </div>
                     </div>
                     <div class="flex gap-4 items-start">
-                        <div class="mt-1 text-purple-400"><i class="fas fa-spinner fa-spin-pulse text-xl"></i></div>
+                        <div class="mt-1 text-purple-400" aria-hidden="true"><i class="fas fa-spinner fa-spin-pulse text-xl"></i></div>
                         <div>
                             <h4 class="font-bold text-white text-lg">3. Continuous BATNA Development</h4>
-                            <p class="text-sm text-gray-400 mt-1">Negotiation is no longer an event; it's a lifecycle. You don't just figure out what is BATNA before a meeting; you actively cultivate parallel options weeks in advance using sequential negotiation strategies.</p>
+                            <p class="text-sm text-gray-400 mt-1">Negotiation is no longer an isolated event; it's a lifecycle. You don't just figure out what is BATNA the night before a meeting; you actively cultivate parallel options weeks and months in advance using sequential networking strategies.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- New Section: FAQ -->
+        <section id="faq" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-l-4 border-yellow-500 pl-4">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <details class="group bg-white border border-gray-200 rounded-xl shadow-sm [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-5 text-gray-900 font-semibold">
+                        <h3 class="text-lg">Can my BATNA change during a negotiation?</h3>
+                        <span class="relative h-5 w-5 shrink-0">
+                            <i class="fas fa-chevron-down absolute inset-0 transition duration-300 group-open:-rotate-180"></i>
+                        </span>
+                    </summary>
+                    <div class="px-5 pb-5 text-gray-600 text-sm leading-relaxed">
+                        Yes, absolutely. BATNA is a dynamic concept. As time passes during a negotiation, new alternatives may appear (strengthening your position) or existing ones may expire (weakening your position). You should constantly monitor and attempt to improve your BATNA throughout the entire negotiation process.
+                    </div>
+                </details>
+                <!-- FAQ Item 2 -->
+                <details class="group bg-white border border-gray-200 rounded-xl shadow-sm [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-5 text-gray-900 font-semibold">
+                        <h3 class="text-lg">Should I reveal my BATNA to the other party?</h3>
+                        <span class="relative h-5 w-5 shrink-0">
+                            <i class="fas fa-chevron-down absolute inset-0 transition duration-300 group-open:-rotate-180"></i>
+                        </span>
+                    </summary>
+                    <div class="px-5 pb-5 text-gray-600 text-sm leading-relaxed">
+                        You should only reveal your BATNA if it is exceptionally strong. Disclosing a powerful backup plan anchors your power, demonstrates that you cannot be pressured, and often forces the other side to present a better offer. Conversely, if your BATNA is weak, keep it strictly confidential to prevent the other party from exploiting your lack of options.
+                    </div>
+                </details>
+                <!-- FAQ Item 3 -->
+                <details class="group bg-white border border-gray-200 rounded-xl shadow-sm[&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-5 text-gray-900 font-semibold">
+                        <h3 class="text-lg">How is BATNA different from a bottom line?</h3>
+                        <span class="relative h-5 w-5 shrink-0">
+                            <i class="fas fa-chevron-down absolute inset-0 transition duration-300 group-open:-rotate-180"></i>
+                        </span>
+                    </summary>
+                    <div class="px-5 pb-5 text-gray-600 text-sm leading-relaxed">
+                        Your "bottom line" (or Reservation Price) is a specific numeric metric—the absolute maximum you will pay or the minimum you will accept. BATNA is the <em>action</em> you take if that bottom line is crossed. For example, if your bottom line is $100, your BATNA is "walking away and buying it from store X for $105."
+                    </div>
+                </details>
+            </div>
+        </section>
+
         <!-- Final CTA -->
-        <section class="text-center bg-blue-50 border border-blue-100 rounded-3xl p-10 mt-16">
+        <section class="text-center bg-blue-50 border border-blue-100 rounded-3xl p-10 mt-16 shadow-inner">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Stop Leaving Value on the Table</h2>
-            <p class="text-gray-600 mb-8 max-w-xl mx-auto">
+            <p class="text-gray-600 mb-8 max-w-xl mx-auto text-lg">
                 Ready to map out your leverage, visualize your ZOPA, and build a strategy that protects your interests? Try our interactive tool right now.
             </p>
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="batna.html" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition shadow-lg w-full sm:w-auto">
-                    <i class="fas fa-play mr-2"></i> Open BATNA Planner Pro
+                <a href="batna.html" aria-label="Open BATNA Planner Pro Web Application" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition shadow-lg w-full sm:w-auto">
+                    <i class="fas fa-play mr-2" aria-hidden="true"></i> Open BATNA Planner Pro
                 </a>
-                <a href="https://github.com/AnggaConni/BATNA" target="_blank" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl text-lg font-bold transition shadow-lg w-full sm:w-auto flex items-center justify-center gap-2">
-                    <i class="fab fa-github"></i> View Source
+                <a href="https://github.com/AnggaConni/BATNA" target="_blank" rel="noopener noreferrer" aria-label="View Source Code on GitHub" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl text-lg font-bold transition shadow-lg w-full sm:w-auto flex items-center justify-center gap-2">
+                    <i class="fab fa-github" aria-hidden="true"></i> View Source
                 </a>
             </div>
             <p class="text-xs text-gray-400 mt-6">Free, client-side only. No data is stored on our servers.</p>
@@ -290,7 +461,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 py-8 mt-12 text-center">
+    <footer class="bg-white border-t border-gray-100 py-8 mt-12 text-center" aria-label="Site Footer">
         <p class="text-sm text-gray-500">&copy; 2026 BATNA Strategy Tools. Based on the Harvard Negotiation Project framework.</p>
     </footer>
 
